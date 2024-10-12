@@ -1,0 +1,50 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        int startX, startY, emptyCount = 0;
+        
+        // Find the starting point and count the number of empty cells
+        for (int i = 0; i < grid.size(); ++i) {
+            for (int j = 0; j < grid[0].size(); ++j) {
+                if (grid[i][j] == 1) {
+                    startX = i;
+                    startY = j;
+                }
+                if (grid[i][j] != -1) {
+                    ++emptyCount;
+                }
+            }
+        }
+        
+        return dfs(grid, startX, startY, emptyCount);
+    }
+
+private:
+    int dfs(vector<vector<int>>& grid, int x, int y, int remaining) {
+        if (x < 0 || y < 0 || x >= grid.size() || y >= grid[0].size() || grid[x][y] == -1) {
+            return 0;
+        }
+
+        if (grid[x][y] == 2) {
+            return remaining == 1 ? 1 : 0;
+        }
+
+        grid[x][y] = -1;
+        --remaining;
+        
+        int paths = dfs(grid, x + 1, y, remaining) +
+                    dfs(grid, x - 1, y, remaining) +
+                    dfs(grid, x, y + 1, remaining) +
+                    dfs(grid, x, y - 1, remaining);
+
+        grid[x][y] = 0;
+        ++remaining;
+
+        return paths;
+    }
+};

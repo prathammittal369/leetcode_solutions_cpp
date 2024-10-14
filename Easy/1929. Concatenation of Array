@@ -1,0 +1,15 @@
+#include <vector>
+
+class Solution {
+public:
+    std::vector<int> getConcatenation(const std::vector<int>& nums) {
+        int n = nums.size();
+        std::vector<int> ans(2 * n);
+
+        std::copy(nums.begin(), nums.end(), ans.begin());
+
+        std::copy(nums.begin(), nums.end(), ans.begin() + n);
+        
+        return ans;
+    }
+};

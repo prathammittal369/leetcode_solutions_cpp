@@ -1,0 +1,48 @@
+
+# Not by ME, its by ChatGPT
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int maxScoreWords(vector<string>& words, vector<char>& letters, vector<int>& score) {
+        vector<int> letterCount(26, 0);
+        for (char c : letters) {
+            letterCount[c - 'a']++;
+        }
+        return backtrack(words, letterCount, score, 0);
+    }
+
+private:
+    int backtrack(vector<string>& words, vector<int>& letterCount, vector<int>& score, int index) {
+        if (index == words.size()) {
+            return 0;
+        }
+
+        int maxScore = backtrack(words, letterCount, score, index + 1);
+
+        vector<int> wordCount(26, 0);
+        int wordScore = 0;
+        bool canForm = true;
+        for (char c : words[index]) {
+            wordCount[c - 'a']++;
+            wordScore += score[c - 'a'];
+            if (wordCount[c - 'a'] > letterCount[c - 'a']) {
+                canForm = false;
+            }
+        }
+
+        if (canForm) {
+            for (char c : words[index]) {
+                letterCount[c - 'a']--;
+            }
+            maxScore = max(maxScore, wordScore + backtrack(words, letterCount, score, index + 1));
+            for (char c : words[index]) {
+                letterCount[c - 'a']++;
+            }
+        }
+
+        return maxScore;
+    }
+};
